@@ -1,0 +1,9 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Repertuar Yönetimi</title>
+<style>body{font-family:Arial;background:#0b0b0b;color:#eee;max-width:760px;margin:auto;padding:20px}textarea{width:100%;height:55vh;background:#151515;color:#fff;border:1px solid #444;border-radius:10px;padding:12px;font-size:15px}button{padding:12px 16px;border:0;border-radius:10px;font-weight:bold;margin:8px 6px 8px 0}h1{font-size:24px}.note{color:#bbb;line-height:1.5}</style></head>
+<body><h1>🎸 Repertuar Düzenleyici</h1>
+<p class="note">Bu sürüm güvenlik nedeniyle sunucudaki listeyi doğrudan değiştirmez. Aşağıya <b>Sanatçı | Şarkı</b> biçiminde listeyi yapıştırıp JSON dosyasını indirebilirsin. Yayındaki <b>repertuar.json</b> dosyasını bununla değiştirince ana sayfa güncellenir.</p>
+<textarea id="t" placeholder="DUMAN | Bu Akşam&#10;KARGO | Yıldızların Altında"></textarea><br>
+<button onclick="make()">repertuar.json indir</button>
+<script>
+function make(){const rows=document.querySelector("#t").value.split(/\n/).map(x=>x.trim()).filter(Boolean);const data=rows.map((r,i)=>{const p=r.split("|");return {id:i+1,artist:(p[0]||"").trim(),title:(p.slice(1).join("|")||"").trim()}}).filter(x=>x.artist&&x.title);const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="repertuar.json";a.click();URL.revokeObjectURL(a.href)}
+</script></body></html>
