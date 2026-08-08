@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>İlker Bilir - Canlı Repertuar</title>
+
+<style>
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.repertuar-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+.scroll-area {
+    position: absolute;
+    width: 100%;
+    animation: yukariKay 120s linear infinite;
+}
+
+.song {
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 20px;
+
+    box-sizing: border-box;
+
+    color: white;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    text-align: center;
+
+    text-shadow:
+        2px 2px 4px #000,
+        -2px -2px 4px #000,
+        2px -2px 4px #000,
+        -2px 2px 4px #000;
+}
+
+.title {
+    color: #ff3158;
+    font-size: 38px;
+    font-weight: 900;
+}
+
+@keyframes yukariKay {
+
+    0% {
+        transform: translateY(100vh);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="repertuar-box">
+
+    <div class="scroll-area" id="liste">
+
+        <div class="song title">
+            🎸 İSTEK PARÇA REPERTUARI
+        </div>
+
+        <div class="song">ATHENA - KİME NE</div>
+        <div class="song">AYNA - ÖLÜNCE SEVEMEZSEM SENİ</div>
+        <div class="song">BARIŞ AKARSU - ISLAK ISLAK</div>
+        <div class="song">BARIŞ MANÇO - DÖNENCE</div>
+        <div class="song">BARIŞ MANÇO - GÜL PEMBE</div>
+        <div class="song">BARIŞ MANÇO - KARA SEVDA</div>
+
+        <div class="song">DUMAN - AH</div>
+        <div class="song">DUMAN - BU AKŞAM</div>
+        <div class="song">DUMAN - HELAL OLSUN</div>
+        <div class="song">DUMAN - HER ŞEYİ YAK</div>
+        <div class="song">DUMAN - SENDEN DAHA GÜZEL</div>
+        <div class="song">DUMAN - YANIBAŞIMDAN</div>
+        <div class="song">DUMAN - ÖYLE DERTLİ</div>
+
+        <div class="song">HALUK LEVENT - ACILARA TUTUNMAK</div>
+        <div class="song">HALUK LEVENT - ANKARA</div>
+        <div class="song">HALUK LEVENT - AŞKIN MAPUSHANE</div>
+        <div class="song">HALUK LEVENT - DERT OLUR</div>
+        <div class="song">HALUK LEVENT - ELFİDA</div>
+        <div class="song">HALUK LEVENT - KAĞIZMAN</div>
+        <div class="song">HALUK LEVENT - İÇİMDE ÖLEN BİRİ VAR</div>
+
+        <div class="song">KARGO - YILDIZLARIN ALTINDA</div>
+
+        <div class="song">MOR VE ÖTESİ - YAZ YAZ YAZ</div>
+        <div class="song">MOR VE ÖTESİ - CAMBAZ</div>
+        <div class="song">MOR VE ÖTESİ - BİR DERDİM VAR</div>
+        <div class="song">MOR VE ÖTESİ - SEVDA ÇİÇEĞİ</div>
+
+        <div class="song">PENTAGRAM - BİR</div>
+        <div class="song">PENTAGRAM - GÜNDÜZ GECE</div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
