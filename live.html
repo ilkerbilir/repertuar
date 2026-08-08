@@ -7,7 +7,6 @@
 <title>Canlı Repertuar</title>
 
 <style>
-
 html, body {
     margin: 0;
     padding: 0;
@@ -26,48 +25,42 @@ html, body {
     background: transparent;
 }
 
-/* KAYAN REPERTUAR */
-
 .list-area {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
 
-    width: calc(100% - 150px);
-
+    width: calc(100% - 135px);
     overflow: hidden;
 }
 
 .scroll {
     position: absolute;
+    left: 0;
     width: 100%;
 
-    animation-name: kaydir;
+    animation-name: yukariKay;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
 
 .song {
-    height: 68px;
+    height: 62px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
     box-sizing: border-box;
-
-    padding: 0 12px;
+    padding: 0 10px;
 
     color: #000000;
-
-    font-size: 29px;
+    font-size: 28px;
     font-weight: 900;
-
     text-align: center;
     line-height: 1.05;
 
-    /* Açık fonda okunaklı olsun */
     text-shadow:
         1px 1px 2px rgba(255,255,255,0.95),
        -1px -1px 2px rgba(255,255,255,0.95),
@@ -75,55 +68,38 @@ html, body {
        -1px 1px 2px rgba(255,255,255,0.95);
 }
 
-.title {
-    color: #000;
-    font-size: 31px;
-    font-weight: 900;
-}
-
-/* QR ALANI */
-
 .qr-box {
     position: absolute;
+    top: 8px;
+    right: 8px;
 
-    top: 10px;
-    right: 10px;
+    width: 118px;
 
-    width: 125px;
-
-    text-align: center;
-
-    background: rgba(255,255,255,0.90);
-
-    padding: 7px;
-
+    background: rgba(255,255,255,0.92);
     border-radius: 10px;
 
+    padding: 6px;
     box-sizing: border-box;
+
+    text-align: center;
 }
 
 .qr-box img {
-    width: 110px;
-    height: 110px;
-
+    width: 100px;
+    height: 100px;
     display: block;
-
     margin: auto;
 }
 
 .qr-text {
     margin-top: 4px;
-
-    color: black;
-
-    font-size: 15px;
+    color: #000000;
+    font-size: 13px;
     font-weight: 900;
-
-    line-height: 1.1;
+    line-height: 1.15;
 }
 
-@keyframes kaydir {
-
+@keyframes yukariKay {
     from {
         transform: translateY(100vh);
     }
@@ -132,30 +108,18 @@ html, body {
         transform: translateY(-100%);
     }
 }
-
 </style>
 </head>
-
 
 <body>
 
 <div class="viewport">
 
     <div class="list-area">
-
-        <div class="scroll" id="scroll">
-
-            <div class="song title">
-                🎸 REPERTUAR
-            </div>
-
-        </div>
-
+        <div class="scroll" id="scroll"></div>
     </div>
 
-
     <div class="qr-box">
-
         <img
         src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Filkerbilir.github.io%2Frepertuar%2F"
         alt="Repertuar QR">
@@ -164,34 +128,39 @@ html, body {
             TÜM REPERTUAR<br>
             QR KODU OKUT
         </div>
-
     </div>
 
 </div>
 
-
 <script>
-
 async function repertuariYukle() {
+
+    const scroll = document.getElementById("scroll");
 
     try {
 
         const response = await fetch(
-            "repertuar.json?t=" + Date.now()
+            "./repertuar.json?v=" + Date.now(),
+            {
+                cache: "no-store"
+            }
         );
+
+        if (!response.ok) {
+            throw new Error("JSON yüklenemedi");
+        }
 
         const songs = await response.json();
 
-        const scroll = document.getElementById("scroll");
-
+        scroll.innerHTML = "";
 
         songs.forEach(song => {
 
             const div = document.createElement("div");
-
             div.className = "song";
 
             div.textContent =
+                song.id + ". " +
                 song.artist.toUpperCase() +
                 " - " +
                 song.title.toUpperCase();
@@ -200,38 +169,28 @@ async function repertuariYukle() {
 
         });
 
-
         /*
-        Her şarkı için yaklaşık 3 saniye.
-        105 şarkı = yaklaşık 5 dakika.
+        105 şarkı için yaklaşık 3,5 dakika.
+        Daha önceki sürümden daha hızlı.
         */
-
-        const sure = Math.max(
-            120,
-            songs.length * 3
-        );
+        const animationTime = songs.length * 2;
 
         scroll.style.animationDuration =
-            sure + "s";
-
+            animationTime + "s";
 
     }
 
     catch (error) {
 
-        document.getElementById("scroll").innerHTML =
-        '<div class="song">REPERTUAR YÜKLENEMEDİ</div>';
+        scroll.innerHTML =
+            '<div class="song">REPERTUAR YÜKLENEMEDİ</div>';
 
         console.error(error);
-
     }
-
 }
 
 repertuariYukle();
-
 </script>
-
 
 </body>
 </html>
