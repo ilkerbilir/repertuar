@@ -7,6 +7,7 @@
 <title>Canlı Repertuar</title>
 
 <style>
+
 html, body {
     margin: 0;
     padding: 0;
@@ -18,50 +19,111 @@ html, body {
 }
 
 .viewport {
+    position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    position: relative;
-    background: rgba(0,0,0,0.28);
-    border-radius: 14px;
+    background: transparent;
+}
+
+/* KAYAN REPERTUAR */
+
+.list-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: calc(100% - 150px);
+
+    overflow: hidden;
 }
 
 .scroll {
     position: absolute;
-    left: 0;
     width: 100%;
-    animation: kaydir 90s linear infinite;
+
+    animation-name: kaydir;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
 .song {
-    height: 72px;
-    box-sizing: border-box;
-    padding: 0 14px;
+    height: 68px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: white;
-    font-size: 30px;
-    font-weight: 800;
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    color: #000000;
+
+    font-size: 29px;
+    font-weight: 900;
+
     text-align: center;
     line-height: 1.05;
 
+    /* Açık fonda okunaklı olsun */
     text-shadow:
-        2px 2px 3px #000,
-       -2px 2px 3px #000,
-        2px -2px 3px #000,
-       -2px -2px 3px #000;
+        1px 1px 2px rgba(255,255,255,0.95),
+       -1px -1px 2px rgba(255,255,255,0.95),
+        1px -1px 2px rgba(255,255,255,0.95),
+       -1px 1px 2px rgba(255,255,255,0.95);
 }
 
 .title {
-    color: #ff3158;
-    font-size: 32px;
+    color: #000;
+    font-size: 31px;
     font-weight: 900;
 }
 
+/* QR ALANI */
+
+.qr-box {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    width: 125px;
+
+    text-align: center;
+
+    background: rgba(255,255,255,0.90);
+
+    padding: 7px;
+
+    border-radius: 10px;
+
+    box-sizing: border-box;
+}
+
+.qr-box img {
+    width: 110px;
+    height: 110px;
+
+    display: block;
+
+    margin: auto;
+}
+
+.qr-text {
+    margin-top: 4px;
+
+    color: black;
+
+    font-size: 15px;
+    font-weight: 900;
+
+    line-height: 1.1;
+}
+
 @keyframes kaydir {
+
     from {
         transform: translateY(100vh);
     }
@@ -70,51 +132,106 @@ html, body {
         transform: translateY(-100%);
     }
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="viewport">
-    <div class="scroll">
 
-        <div class="song title">🎸 REPERTUAR</div>
+    <div class="list-area">
 
-        <div class="song">ATHENA - KİME NE</div>
-        <div class="song">AYNA - ÖLÜNCE SEVEMEZSEM SENİ</div>
-        <div class="song">BARIŞ AKARSU - ISLAK ISLAK</div>
-        <div class="song">BARIŞ MANÇO - DÖNENCE</div>
-        <div class="song">BARIŞ MANÇO - GÜL PEMBE</div>
-        <div class="song">BARIŞ MANÇO - KARA SEVDA</div>
+        <div class="scroll" id="scroll">
 
-        <div class="song">DUMAN - AH</div>
-        <div class="song">DUMAN - BU AKŞAM</div>
-        <div class="song">DUMAN - HELAL OLSUN</div>
-        <div class="song">DUMAN - HER ŞEYİ YAK</div>
-        <div class="song">DUMAN - SENDEN DAHA GÜZEL</div>
-        <div class="song">DUMAN - YANIBAŞIMDAN</div>
-        <div class="song">DUMAN - ÖYLE DERTLİ</div>
+            <div class="song title">
+                🎸 REPERTUAR
+            </div>
 
-        <div class="song">HALUK LEVENT - ACILARA TUTUNMAK</div>
-        <div class="song">HALUK LEVENT - ANKARA</div>
-        <div class="song">HALUK LEVENT - AŞKIN MAPUSHANE</div>
-        <div class="song">HALUK LEVENT - DERT OLUR</div>
-        <div class="song">HALUK LEVENT - ELFİDA</div>
-        <div class="song">HALUK LEVENT - KAĞIZMAN</div>
-        <div class="song">HALUK LEVENT - İÇİMDE ÖLEN BİRİ VAR</div>
-
-        <div class="song">KARGO - YILDIZLARIN ALTINDA</div>
-
-        <div class="song">MOR VE ÖTESİ - YAZ YAZ YAZ</div>
-        <div class="song">MOR VE ÖTESİ - CAMBAZ</div>
-        <div class="song">MOR VE ÖTESİ - BİR DERDİM VAR</div>
-        <div class="song">MOR VE ÖTESİ - SEVDA ÇİÇEĞİ</div>
-
-        <div class="song">PENTAGRAM - BİR</div>
-        <div class="song">PENTAGRAM - GÜNDÜZ GECE</div>
+        </div>
 
     </div>
+
+
+    <div class="qr-box">
+
+        <img
+        src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Filkerbilir.github.io%2Frepertuar%2F"
+        alt="Repertuar QR">
+
+        <div class="qr-text">
+            TÜM REPERTUAR<br>
+            QR KODU OKUT
+        </div>
+
+    </div>
+
 </div>
+
+
+<script>
+
+async function repertuariYukle() {
+
+    try {
+
+        const response = await fetch(
+            "repertuar.json?t=" + Date.now()
+        );
+
+        const songs = await response.json();
+
+        const scroll = document.getElementById("scroll");
+
+
+        songs.forEach(song => {
+
+            const div = document.createElement("div");
+
+            div.className = "song";
+
+            div.textContent =
+                song.artist.toUpperCase() +
+                " - " +
+                song.title.toUpperCase();
+
+            scroll.appendChild(div);
+
+        });
+
+
+        /*
+        Her şarkı için yaklaşık 3 saniye.
+        105 şarkı = yaklaşık 5 dakika.
+        */
+
+        const sure = Math.max(
+            120,
+            songs.length * 3
+        );
+
+        scroll.style.animationDuration =
+            sure + "s";
+
+
+    }
+
+    catch (error) {
+
+        document.getElementById("scroll").innerHTML =
+        '<div class="song">REPERTUAR YÜKLENEMEDİ</div>';
+
+        console.error(error);
+
+    }
+
+}
+
+repertuariYukle();
+
+</script>
+
 
 </body>
 </html>
