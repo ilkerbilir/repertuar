@@ -4,10 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>İlker Bilir - Canlı Repertuar</title>
+<title>Canlı Repertuar</title>
 
 <style>
-
 html, body {
     margin: 0;
     padding: 0;
@@ -18,74 +17,68 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.repertuar-box {
-    position: relative;
+.viewport {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: transparent;
+    position: relative;
+    background: rgba(0,0,0,0.28);
+    border-radius: 14px;
 }
 
-.scroll-area {
+.scroll {
     position: absolute;
+    left: 0;
     width: 100%;
-    animation: yukariKay 120s linear infinite;
+    animation: kaydir 90s linear infinite;
 }
 
 .song {
-    height: 75px;
+    height: 72px;
+    box-sizing: border-box;
+    padding: 0 14px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding: 0 20px;
-
-    box-sizing: border-box;
-
     color: white;
-
-    font-size: 34px;
-    font-weight: 700;
-
+    font-size: 30px;
+    font-weight: 800;
     text-align: center;
+    line-height: 1.05;
 
     text-shadow:
-        2px 2px 4px #000,
-        -2px -2px 4px #000,
-        2px -2px 4px #000,
-        -2px 2px 4px #000;
+        2px 2px 3px #000,
+       -2px 2px 3px #000,
+        2px -2px 3px #000,
+       -2px -2px 3px #000;
 }
 
 .title {
     color: #ff3158;
-    font-size: 38px;
+    font-size: 32px;
     font-weight: 900;
 }
 
-@keyframes yukariKay {
-
-    0% {
+@keyframes kaydir {
+    from {
         transform: translateY(100vh);
     }
 
-    100% {
+    to {
         transform: translateY(-100%);
     }
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="repertuar-box">
+<div class="viewport">
+    <div class="scroll">
 
-    <div class="scroll-area" id="liste">
-
-        <div class="song title">
-            🎸 İSTEK PARÇA REPERTUARI
-        </div>
+        <div class="song title">🎸 REPERTUAR</div>
 
         <div class="song">ATHENA - KİME NE</div>
         <div class="song">AYNA - ÖLÜNCE SEVEMEZSEM SENİ</div>
@@ -121,7 +114,6 @@ html, body {
         <div class="song">PENTAGRAM - GÜNDÜZ GECE</div>
 
     </div>
-
 </div>
 
 </body>
