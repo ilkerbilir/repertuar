@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>İlker Bilir - Canlı Repertuar</title>
 <style>
 :root{--bg:#090909;--card:#151515;--line:#303030;--text:#f4f4f4;--muted:#aaa;--accent:#e53935}
@@ -9,32 +10,52 @@
 .wrap{max-width:720px;margin:auto;padding:20px 14px 60px}.hero{text-align:center;padding:20px 5px 14px}
 h1{font-size:26px;margin:0 0 6px;letter-spacing:.5px}.sub{color:var(--muted);font-size:14px}
 .search{width:100%;padding:15px;border-radius:12px;border:1px solid var(--line);background:#111;color:white;font-size:16px;outline:none}
-.filters{display:flex;gap:8px;margin:12px 0 16px;flex-wrap:wrap}.filters button,.request{border:1px solid var(--line);background:#171717;color:#eee;border-radius:999px;padding:10px 14px;font-weight:700}
+.filters{display:flex;gap:8px;margin:12px 0 16px;flex-wrap:wrap}.filters button,.request,.tickerlink{border:1px solid var(--line);background:#171717;color:#eee;border-radius:999px;padding:10px 14px;font-weight:700}
 .filters button.active{background:var(--accent);border-color:var(--accent)}
 .song{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid #252525;border-radius:13px;padding:13px;margin:8px 0}
-.meta{min-width:0}.title{font-weight:800;font-size:16px}.artist{font-size:13px;color:var(--muted);margin-top:4px}.request{white-space:nowrap;cursor:pointer}.request:active{transform:scale(.97)}
-.count{text-align:right;color:var(--muted);font-size:13px;margin:0 2px 8px}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#111;padding:12px 16px;border-radius:10px;font-weight:700;display:none;box-shadow:0 8px 30px #0008}
-.empty{text-align:center;color:var(--muted);padding:30px}
+.meta{min-width:0}.title{font-weight:800;font-size:16px}.artist{font-size:13px;color:var(--muted);margin-top:4px}.request{white-space:nowrap;cursor:pointer}
+.count{text-align:right;color:var(--muted);font-size:13px;margin:0 2px 8px}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#111;padding:12px 16px;border-radius:10px;font-weight:700;display:none}
+.empty{text-align:center;color:var(--muted);padding:30px}.toplinks{text-align:center;margin:8px 0 14px}a{color:#fff;text-decoration:none}
 </style></head>
 <body><div class="wrap">
 <div class="hero"><h1>🎸 İLKER BİLİR</h1><div class="sub">CANLI REPERTUAR • Şarkını seç, adını kopyala ve TikTok yorumuna yapıştır 🤘</div></div>
+<div class="toplinks"><a class="tickerlink" href="kayan.html">📺 Kayan repertuar</a></div>
 <input id="q" class="search" placeholder="Şarkı veya sanatçı ara...">
 <div class="filters"><button class="active" data-f="all">Tümü</button><button data-f="tr">Türkçe</button><button data-f="foreign">Yabancı</button></div>
 <div id="count" class="count"></div><div id="list"></div>
 </div><div id="toast" class="toast">Şarkı adı kopyalandı ✓</div>
 <script>
-const turkishArtists = new Set(["ATHENA","AYNA","BARIŞ AKARSU","BARIŞ MANÇO","DUMAN","HALUK LEVENT","KARGO","KOLPA","KURBAN","KURTALAN EKSPRES","MOR VE ÖTESİ","MOĞOLLAR","MURAT KEKİLLİ","OGÜN SANLISOY","PENTAGRAM","SIFIR KM","YAVUZ ÇETİN","YÜKSEK SADAKAT","ŞEBNEM FERAH"]);
+const SHEET_ID="1l7u8zBVWbujx0wXIljCmaiMUy-GYDmFOE1hKaD4nnvU";
+const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+const turkishArtists = new Set(["ATHENA","AYNA","BARIŞ AKARSU","BARIŞ MANÇO","DUMAN","HALUK LEVENT","KARGO","KOLPA","KURBAN","KURTALAN EKSPRES","MOR VE ÖTESİ","MOĞOLLAR","MURAT KEKİLLİ","OGÜN SANLISOY","PENTAGRAM","SIFIR KM","YAVUZ ÇETİN","YÜKSEK SADAKAT","ŞEBNEM FERAH","MFÖ"]);
 let songs=[], filter="all";
-const norm=s=>s.toLocaleLowerCase("tr-TR");
-async function load(){songs=await (await fetch("repertuar.json?"+Date.now())).json(); render()}
+const norm=s=>String(s||"").toLocaleLowerCase("tr-TR");
+function parseCSV(text){
+ const rows=[]; let row=[], cell="", q=false;
+ for(let i=0;i<text.length;i++){ const c=text[i], n=text[i+1];
+   if(q){ if(c=='"'&&n=='"'){cell+='"';i++;} else if(c=='"') q=false; else cell+=c; }
+   else { if(c=='"') q=true; else if(c==','){row.push(cell);cell="";} else if(c=='\n'){row.push(cell.replace(/\r$/,""));rows.push(row);row=[];cell="";} else cell+=c; }
+ }
+ if(cell.length||row.length){row.push(cell.replace(/\r$/,""));rows.push(row);}
+ return rows;
+}
+async function load(){
+ try{
+   const r=await fetch(CSV_URL+"&_="+Date.now(),{cache:"no-store"});
+   if(!r.ok) throw new Error("Sheet okunamadı");
+   const rows=parseCSV(await r.text());
+   songs=rows.slice(1).filter(r=>r[0]&&r[1]).map((r,i)=>({id:i+1,artist:r[0].trim(),title:r[1].trim()}));
+   render();
+ }catch(e){document.querySelector("#list").innerHTML='<div class="empty">Repertuar yüklenemedi. Google Sheet paylaşım ayarını kontrol et.</div>';}
+}
 function render(){
  const q=norm(document.querySelector("#q").value.trim());
- const rows=songs.filter(x=>(filter==="all"||(filter==="tr"&&turkishArtists.has(x.artist))||(filter==="foreign"&&!turkishArtists.has(x.artist))) && (!q||norm(x.artist+" "+x.title).includes(q)));
+ const rows=songs.filter(x=>(filter==="all"||(filter==="tr"&&turkishArtists.has(x.artist.toUpperCase()))||(filter==="foreign"&&!turkishArtists.has(x.artist.toUpperCase()))) && (!q||norm(x.artist+" "+x.title).includes(q)));
  document.querySelector("#count").textContent=rows.length+" şarkı";
  document.querySelector("#list").innerHTML=rows.length?rows.map(x=>`<div class="song"><div class="meta"><div class="title">${esc(x.title)}</div><div class="artist">${esc(x.artist)}</div></div><button class="request" onclick='copySong(${JSON.stringify(x.title)})'>İSTEK YAP</button></div>`).join(""):`<div class="empty">Şarkı bulunamadı.</div>`;
 }
 function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-async function copySong(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()} const z=document.querySelector("#toast");z.style.display="block";setTimeout(()=>z.style.display="none",1600)}
+async function copySong(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()}const z=document.querySelector("#toast");z.style.display="block";setTimeout(()=>z.style.display="none",1600)}
 document.querySelector("#q").addEventListener("input",render);
 document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-f]").forEach(x=>x.classList.remove("active"));b.classList.add("active");filter=b.dataset.f;render()});
 load();
