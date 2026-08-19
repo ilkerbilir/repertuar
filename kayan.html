@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kayan Repertuar</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#fff;font-family:Arial,sans-serif}
+.header{position:fixed;top:0;left:0;right:0;z-index:5;text-align:center;padding:12px;background:rgba(0,0,0,.88);border-bottom:1px solid #333}
+.header b{font-size:22px}.hint{font-size:12px;color:#aaa;margin-top:4px}.viewport{position:absolute;top:70px;bottom:0;left:0;right:0;overflow:hidden}
+.track{position:absolute;width:100%;animation:scroll var(--dur,80s) linear infinite}.item{padding:13px 18px;border-bottom:1px solid #222;text-align:center}
+.song{font-weight:800;font-size:28px}.artist{font-size:18px;color:#aaa;margin-top:4px}@keyframes scroll{from{transform:translateY(100vh)}to{transform:translateY(-100%)}}
+.error{padding:100px 20px;text-align:center;color:#aaa}
+</style></head>
+<body><div class="header"><b>🎸 İLKER BİLİR • REPERTUAR</b><div class="hint">Google Sheets'ten otomatik güncellenir</div></div>
+<div class="viewport"><div id="track" class="track"></div></div>
+<script>
+const SHEET_ID="1l7u8zBVWbujx0wXIljCmaiMUy-GYDmFOE1hKaD4nnvU";
+const CSV_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function parseCSV(text){const rows=[];let row=[],cell="",q=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(q){if(c=='"'&&n=='"'){cell+='"';i++;}else if(c=='"')q=false;else cell+=c;}else{if(c=='"')q=true;else if(c==','){row.push(cell);cell="";}else if(c=='\n'){row.push(cell.replace(/\r$/,""));rows.push(row);row=[];cell="";}else cell+=c;}}if(cell.length||row.length){row.push(cell.replace(/\r$/,""));rows.push(row);}return rows;}
+async function load(){try{const r=await fetch(CSV_URL+"&_="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error();const rows=parseCSV(await r.text()).slice(1).filter(r=>r[0]&&r[1]);const t=document.getElementById("track");t.innerHTML=rows.map(r=>`<div class="item"><div class="song">${esc(r[1].trim())}</div><div class="artist">${esc(r[0].trim())}</div></div>`).join("");t.style.setProperty("--dur",Math.max(45,rows.length*2.2)+"s");}catch(e){document.body.innerHTML='<div class="error">Repertuar yüklenemedi. Google Sheet paylaşım ayarını kontrol et.</div>';}}
+load();setInterval(load,60000);
+</script></body></html>
